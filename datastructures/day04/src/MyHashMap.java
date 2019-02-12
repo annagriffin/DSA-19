@@ -53,7 +53,12 @@ public class MyHashMap<K, V> implements Map<K, V> {
         // TODO
         // hint: use key.hashCode() to calculate the key's hashCode using its built in hash function
         // then use % to choose which bucket to return.
-        return null;
+
+        int index = 0;
+        if (key != null) {
+            index = Math.abs(key.hashCode()) % buckets.length;
+        }
+        return buckets[index];
     }
 
     @Override
@@ -72,6 +77,15 @@ public class MyHashMap<K, V> implements Map<K, V> {
     @Override
     public boolean containsKey(Object key) {
         // TODO
+
+        LinkedList<Entry> ll = chooseBucket(key);
+
+        for (Entry each: ll) {
+            if (key.equals(each.getKey())) {
+                return true;
+            }
+        }
+
         return false;
     }
 
@@ -81,12 +95,38 @@ public class MyHashMap<K, V> implements Map<K, V> {
     @Override
     public boolean containsValue(Object value) {
         // TODO
+        for (LinkedList<Entry> entry : buckets) {
+
+            for (Entry each: entry) {
+                if (value == null) {
+                    if (each.getValue() == null) {
+                        return true;
+                    }
+                } else if (value.equals(each.getValue())) {
+                    return true;
+                }
+            }
+
+        }
         return false;
     }
 
     @Override
     public V get(Object key) {
         // TODO
+
+        LinkedList<Entry> ll = chooseBucket(key);
+
+        for (Entry each: ll) {
+            if (each == null) {
+
+            } else if (key.equals(each.getKey())) {
+                return each.getValue();
+            }
+        }
+
+
+
         return null;
     }
 
@@ -99,6 +139,25 @@ public class MyHashMap<K, V> implements Map<K, V> {
         // TODO: Complete this method
         // hint: use chooseBucket() to determine which bucket to place the pair in
         // hint: use rehash() to appropriately grow the hashmap if needed
+
+        // REHASH???
+        LinkedList<Entry> ll = chooseBucket(key);
+        for (Entry each: ll) {
+            if (key.equals(each.getKey())) {
+                V tempVal = each.getValue();
+                each.setValue(value);
+                return tempVal;
+            }
+        }
+
+        Entry entry = new Entry(key,value);
+        ll.add(entry);
+        size += 1;
+
+        if ((double)size() / buckets.length > ALPHA) {
+            rehash(GROWTH_FACTOR);
+        }
+
         return null;
     }
 
@@ -112,7 +171,32 @@ public class MyHashMap<K, V> implements Map<K, V> {
         // TODO
         // hint: use chooseBucket() to determine which bucket the key would be
         // hint: use rehash() to appropriately grow the hashmap if needed
-        return null;
+
+        LinkedList<Entry> ll = chooseBucket(key);
+        Entry tempEntry = null;
+        for (Entry each: ll) {
+            if (key.equals(each.getKey())) {
+                tempEntry = each;
+                size -= 1;
+                break;
+
+            }
+        }
+
+        if (tempEntry != null) {
+            ll.remove(tempEntry);
+        }
+
+
+        if ((double)(size()) / buckets.length < BETA) {
+            if (buckets.length * SHRINK_FACTOR >= MIN_BUCKETS) {
+                rehash(SHRINK_FACTOR);
+            }
+        }
+
+
+        return tempEntry.value;
+
     }
 
     @Override
@@ -130,6 +214,23 @@ public class MyHashMap<K, V> implements Map<K, V> {
     private void rehash(double growthFactor) {
         // TODO
         // hint: once you have removed all values from the buckets, use put(k, v) to add them back in the correct place
+
+
+        double growthSize = buckets.length * growthFactor;
+        int growthSizeInt = (int)growthSize;
+
+        LinkedList<Entry>[] temp = buckets;
+        initBuckets(growthSizeInt);
+        size = 0;
+
+        for (LinkedList<Entry> entry: temp) {
+            for (Entry each : entry) {
+                put(each.getKey(),each.getValue());
+            }
+
+        }
+
+
     }
 
     private void initBuckets(int size) {
