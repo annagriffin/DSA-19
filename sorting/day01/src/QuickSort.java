@@ -56,15 +56,15 @@ public class QuickSort extends SortAlgorithm {
     public int partition(int[] array, int lo, int hi) {
         // TODO
 
-        int pivot = array[hi];
-        int pivotIndex = hi;
+        int pivot = array[lo];
+        int pivotIndex = lo;
 
-        for (int i=lo;i<hi;i++) {
-            if (array[i] >= pivot && i < pivotIndex) {
-                swap(array,i,pivotIndex-1);
-                swap(array,pivotIndex-1,pivotIndex);
-                pivotIndex-=1;
-                i-=1;
+        for (int i=hi;i>lo;i--) {
+            if (array[i] < pivot && i > pivotIndex) {
+                swap(array, i, pivotIndex + 1);
+                swap(array, pivotIndex + 1, pivotIndex);
+                pivotIndex += 1;
+                i += 1;
 
             }
         }

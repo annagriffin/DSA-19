@@ -20,17 +20,39 @@ public class HeapSort extends SortAlgorithm {
     public void sink(int i) {
         // TODO
 
+        int left = leftChild(i);
+        int right = rightChild(i);
 
-        if (leftChild(i) < this.size && this.heap[leftChild(i)] > this.heap[i]) {
-            swap(this.heap,i,leftChild(i));
-            sink(leftChild(i));
-        } else if (rightChild(i) < this.size && this.heap[rightChild(i)] > this.heap[i]) {
-            swap(this.heap,i,this.rightChild(i));
-            sink(rightChild(i));
+
+        if ((size-1) < left) {
+            left = i;
         }
 
-        return;
+        if ((size-1) < right) {
+            right = i;
+        }
 
+
+
+        if ((size-1) < right && heap[left] > heap[i]) {
+            swap(heap,i, leftChild(i));
+            return;
+        } else if ((size-1) < left) {
+            swap(heap,i,rightChild(i));
+            return;
+        }
+
+        if (heap[i] < heap[left] || heap[i] < heap[right]) {
+            if (heap[left] > heap[right]) {
+                swap(heap,i, left);
+                sink(left);
+            } else {
+                swap(heap,i,right);
+                sink(right);
+            }
+        }
+
+    return;
 
     }
 
@@ -40,23 +62,15 @@ public class HeapSort extends SortAlgorithm {
         this.heap = array;
         this.size = array.length;
 
-        int max = 0;
 
-        for (int i=this.size / 2 - 1; i>=0; i--) {
+
+        for (int i=((this.size / 2) - 1); i>=0; i--) {
             // TODO
 
-            if (leftChild(i) < size && array[leftChild(i)] > array[i]) {
-                sink(i);
-            }
-
-            if (rightChild(i) < size && array[rightChild(i)] > array[i]) {
-                sink(i);
-            }
-
-
+            sink(i);
         }
 
-        return;
+
     }
 
     /**
@@ -69,15 +83,14 @@ public class HeapSort extends SortAlgorithm {
     @Override
     public int[] sort(int[] array) {
         heapify(array);
-        this.size = array.length;
 
-        if (this.size <= 1) {
+        if (this.size == 1) {
             return heap;
         }
-        for (int i=this.size-1; i>0; i--) {
+        for (int i=this.size-1; i >0; i--) {
             // TODO
-            swap(array, 0, this.size-1);
-            this.size-=1;
+            swap(heap, i, 0);
+            this.size -=1;
             sink(0);
         }
 
