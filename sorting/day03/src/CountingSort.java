@@ -2,7 +2,8 @@ public class CountingSort {
 
     /**
      * Use counting sort to sort non-negative integer array A.
-     * Runtime: TODO
+     * Runtime: O(n+max)
+     * Space: O(k)
      *
      * k: maximum element in array A
      */
