@@ -92,8 +92,6 @@ public class PeakFinding {
     public static int[] findTwoDPeak(int[][] nums) {
         // TODO
 
-        int length = nums.length;
-
         int middleX = nums[0].length /2;
         int middleY = nums.length /2;
 
@@ -104,19 +102,19 @@ public class PeakFinding {
         int lowY = 0;
         int[] answer = new int[2];
 
-        int resultX = peakX(middleX,middleY,nums);
-        int resultY = peakY(middleX,middleY,nums);
+       // (middleX < nums.length-1 || middleX > 0 ) && (middleY > 0 || middleY < nums[0].length-1)
+        int i = 0;
 
+        while (i<nums.length){
+            int resultX = peakX(middleX,middleY,nums);
+            int resultY = peakY(middleX,middleY,nums);
 
-        while ((middleX < nums.length-1 || middleX > 0 ) && (middleY > 0 || middleY < nums[0].length-1)){
-
-            
             if (resultX == 0 && resultY == 0) {
-                answer[0] = resultX;
-                answer[1] = resultY;
+                answer[0] = middleX;
+                answer[1] = middleY;
 
                 return answer;
-            }else {
+            } else {
                 if (resultX == 1) {
                     lowX = middleX +1;
                 }
@@ -169,15 +167,9 @@ public class PeakFinding {
 
             middleX = (highX+lowX) / 2;
             middleY = (highY+lowY) / 2;
-
-            resultX = peakX(middleX,middleY,nums);
-            resultY = peakY(middleX,middleY,nums);
-
-
-
+            i++;
 
         }
-
 
 
         return answer;
