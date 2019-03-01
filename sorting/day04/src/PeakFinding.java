@@ -78,7 +78,6 @@ public class PeakFinding {
             } else if (result == -1) {
                 high = middle-1;
 
-
             }
             i++;
             middle = (low+high)/2;
@@ -102,10 +101,9 @@ public class PeakFinding {
         int lowY = 0;
         int[] answer = new int[2];
 
-       // (middleX < nums.length-1 || middleX > 0 ) && (middleY > 0 || middleY < nums[0].length-1)
-        int i = 0;
 
-        while (i<nums.length){
+
+        while ((middleX < nums.length-1 || middleX > 0 ) && (middleY > 0 || middleY < nums[0].length-1)){
             int resultX = peakX(middleX,middleY,nums);
             int resultY = peakY(middleX,middleY,nums);
 
@@ -119,14 +117,9 @@ public class PeakFinding {
                     lowX = middleX +1;
                 }
                 if (resultX == -1) {
-                    highX = middleY -1;
+                    highX = middleX -1;
                 }
-//                if (resultY == 1) {
-//                    lowY = middleY+1;
-//                }
-//                if (resultY == -1) {
-//                    highY = middleY -1;
-//                }
+
                 if (resultX == 0) {
                     if (resultY == 1) {
                         lowY = middleY + 1;
@@ -167,7 +160,7 @@ public class PeakFinding {
 
             middleX = (highX+lowX) / 2;
             middleY = (highY+lowY) / 2;
-            i++;
+
 
         }
 
