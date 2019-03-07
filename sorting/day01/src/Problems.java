@@ -43,6 +43,75 @@ public class Problems {
     public static double[] runningMedian(int[] inputStream) {
         double[] runningMedian = new double[inputStream.length];
         // TODO
+
+        PriorityQueue<Integer> max = maxPQ();
+        PriorityQueue<Integer> min = minPQ();
+
+        if (inputStream.length == 0) {
+            return new double[] {};
+        }
+        int medianIdx = 0;
+
+        if (inputStream.length == 1) {
+            runningMedian[0] = inputStream[0];
+            return runningMedian;
+        }
+
+        runningMedian[0] = inputStream[0];
+        max.offer(inputStream[0]);
+
+        System.out.println("hi");
+        for (int i=1; i<inputStream.length; i++) {
+
+
+
+            if (inputStream[i] <= runningMedian[medianIdx]) {
+                max.offer(inputStream[i]);
+            } else {
+                min.offer(inputStream[i]);
+            }
+
+
+
+            if (min.size() == 0) {
+                if (max.peek() > inputStream[i]) {
+                    min.offer(max.peek());
+                    max.poll();
+                }
+                medianIdx += 1;
+                int temp = inputStream[i];
+                double dub = (double) temp;
+                runningMedian[medianIdx] = (dub + runningMedian[medianIdx-1]) / 2.0;
+
+            } else {
+
+                if (max.size() - min.size() > 1) {
+                    min.offer(max.peek());
+                    max.poll();
+                } else if (max.size() - min.size() < -1) {
+                    max.offer(min.peek());
+                    min.poll();
+                }
+
+                if (max.size() == min.size()) {
+                    medianIdx += 1;
+                    runningMedian[medianIdx] = (min.peek() + max.peek()) / 2.0;
+
+                } else if (min.size() > max.size()) {
+                    medianIdx += 1;
+                    runningMedian[medianIdx] = min.peek();
+
+                } else {
+                    medianIdx += 1;
+                    runningMedian[medianIdx] = max.peek();
+
+                }
+            }
+            System.out.println(runningMedian[i]);
+
+
+        }
+
         return runningMedian;
     }
 
