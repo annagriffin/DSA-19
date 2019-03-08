@@ -10,6 +10,8 @@ public class AVLTree<T extends Comparable<T>> extends BinarySearchTree<T> {
             // TODO
             // update the height of the tree using the height of the left and right child
             // return balance(n)
+            n.height = Math.max(height(n.leftChild), height(n.rightChild)) + 1;
+            return balance(n);
         }
         return null;
     }
@@ -24,6 +26,8 @@ public class AVLTree<T extends Comparable<T>> extends BinarySearchTree<T> {
             // TODO
             // update the height of the tree using the height of the left and right child
             // return balance(n)
+            n.height = Math.max(height(n.leftChild), height(n.rightChild)) + 1;
+            return balance(n);
         }
         return null;
     }
@@ -44,7 +48,12 @@ public class AVLTree<T extends Comparable<T>> extends BinarySearchTree<T> {
     // Return the height of the given node. Return -1 if null.
     private int height(TreeNode<T> n) {
         // TODO
-        return 0;
+
+        if (n == null) {
+            return -1;
+        }
+
+        return n.height;
     }
 
     public int height() {
@@ -54,7 +63,31 @@ public class AVLTree<T extends Comparable<T>> extends BinarySearchTree<T> {
     // Restores the AVL tree property of the subtree. Return the head of the new subtree
     TreeNode<T> balance(TreeNode<T> n) {
         // TODO: (if you're having trouble, use pseudocode provided in slides)
-        return null;
+
+        if (balanceFactor(n) > 1) {
+            if (balanceFactor(n.rightChild) <= -1) {
+                n.rightChild = rotateRight(n.rightChild);
+                n.rightChild.height = Math.max(height(n.rightChild.rightChild), height(n.rightChild.leftChild)) +1;
+                n.rightChild.rightChild.height = Math.max(height(n.rightChild.rightChild), height(n.rightChild.leftChild)) +1;
+            }
+            n = rotateLeft(n);
+            n.rightChild.height = Math.max(height(n.rightChild.rightChild), height(n.rightChild.leftChild)) +1;
+            n.height = Math.max(height(n.rightChild), height(n.leftChild)) +1;
+        }
+        if (balanceFactor(n) < -1) {
+            if (balanceFactor(n.leftChild) >= 1) {
+                n.leftChild = rotateLeft(n.leftChild);
+                n.leftChild.height = Math.max(height(n.leftChild.rightChild), height(n.leftChild.leftChild)) +1;
+                n.leftChild.leftChild.height = Math.max(height(n.leftChild.leftChild), height(n.leftChild.rightChild)) +1;
+            }
+            n = rotateRight(n);
+            n.leftChild.height = Math.max(height(n.leftChild.rightChild), height(n.leftChild.leftChild)) +1;
+            n.height = Math.max(height(n.rightChild), height(n.leftChild)) +1;
+
+        }
+
+
+        return n;
     }
 
     /**
@@ -66,7 +99,9 @@ public class AVLTree<T extends Comparable<T>> extends BinarySearchTree<T> {
      */
     private int balanceFactor(TreeNode<T> n) {
         // TODO
-        return 0;
+
+
+        return height(n.rightChild) - height(n.leftChild);
     }
 
     /**
@@ -74,7 +109,14 @@ public class AVLTree<T extends Comparable<T>> extends BinarySearchTree<T> {
      */
     private TreeNode<T> rotateRight(TreeNode<T> n) {
         // TODO
-        return null;
+
+        TreeNode<T> x = n.leftChild;
+        TreeNode<T> beta1 = x.rightChild;
+        x.rightChild = n;
+        n.leftChild = beta1;
+        n.height = Math.max(height(n.rightChild), height(n.leftChild)) +1;
+        x.height = Math.max(height(x.rightChild), height(x.rightChild)) + 1;
+        return x;
     }
 
     /**
@@ -82,6 +124,14 @@ public class AVLTree<T extends Comparable<T>> extends BinarySearchTree<T> {
      */
     private TreeNode<T> rotateLeft(TreeNode<T> n) {
         // TODO
-        return null;
+
+        TreeNode<T> k = n.rightChild;
+        TreeNode<T> beta = k.leftChild;
+        k.leftChild = n;
+        n.rightChild = beta;
+        n.height = Math.max(height(n.rightChild), height(n.leftChild)) +1;
+        k.height = Math.max(height(k.rightChild), height(k.rightChild)) + 1;
+        return k;
+
     }
 }
