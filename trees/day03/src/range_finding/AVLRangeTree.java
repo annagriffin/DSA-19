@@ -1,5 +1,6 @@
 package range_finding;
 
+import javax.print.DocFlavor;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,6 +13,7 @@ public class AVLRangeTree extends BinarySearchTree<Integer> {
     RangeNode<Integer> delete(RangeNode<Integer> n, Integer key) {
         n = super.delete(n, key);
         if (n != null) {
+            n.rank = getDecendences(n);
             n.height = 1 + Math.max(height(n.leftChild), height(n.rightChild));
             return balance(n);
         }
@@ -25,6 +27,7 @@ public class AVLRangeTree extends BinarySearchTree<Integer> {
     RangeNode<Integer> insert(RangeNode<Integer> n, Integer key) {
         n = super.insert(n, key);
         if (n != null) {
+            n.rank = getDecendences(n);
             n.height = 1 + Math.max(height(n.leftChild), height(n.rightChild));
             return balance(n);
         }
@@ -48,6 +51,11 @@ public class AVLRangeTree extends BinarySearchTree<Integer> {
     private int height(RangeNode x) {
         if (x == null) return -1;
         return x.height;
+    }
+
+    private int getRank(RangeNode x) {
+        if (x==null) return 0;
+        return x.rank;
     }
 
     public int height() {
@@ -74,16 +82,102 @@ public class AVLRangeTree extends BinarySearchTree<Integer> {
     // TODO: runtime = O(?)
     public List<Integer> rangeIndex(int lo, int hi) {
         // TODO
+
+
         List<Integer> l = new LinkedList<>();
+        addToList(root, l,  lo, hi);
+
         return l;
     }
+
+    private void addToList(RangeNode<Integer> node, List<Integer> l, int lo, int hi) {
+        if (node != null) {
+            if (node.key >= lo && node.key <= hi) {
+                addToList(node.leftChild, l, lo, hi);
+                l.add(node.key);
+                addToList(node.rightChild, l, lo, hi);
+            }
+
+            if (node.key < lo) {
+                addToList(node.rightChild,l,lo,hi);
+
+            }
+
+            if (node.key > hi) {
+                addToList(node.leftChild, l, lo, hi);
+            }
+        }
+
+    }
+
+
+
+
+
+
+
+
 
     // return the number of keys between [lo, hi], inclusive
     // TODO: runtime = O(?)
     public int rangeCount(int lo, int hi) {
         // TODO
-        return 0;
+
+
+        int high =  rank(root, hi+1);
+        int low = rank(root, lo);
+
+        int count = high - low;
+
+
+
+        return count;
     }
+
+//    private int count(RangeNode<Integer> node, int lo, int hi) {
+//        if (node == null) {
+//            return 0;
+//        }
+//
+//        if(node.key >= lo && node.key <= hi) {
+//            return 1 + count(node.leftChild, lo, hi) + count(node.rightChild, lo, hi);
+//        } else if (node.key < lo) {
+//            return count(node.rightChild, lo, hi);
+//        } else {
+//            return count(node.leftChild, lo, hi);
+//        }
+//    }
+
+
+    private int rank(RangeNode<Integer> node, int k) {
+        if (node == null) {
+            return 0;
+        } else if (node.key >= k) {
+            return rank(node.leftChild, k);
+        } else {
+            if (node.leftChild != null) {
+                return(getRank(node.leftChild) + rank(node.rightChild, k) + 2);
+
+            } else {
+                return(getRank(node.leftChild) + rank(node.rightChild, k) + 1);
+
+            }
+        }
+    }
+
+
+
+    private int getDecendences(RangeNode<Integer> node) {
+
+        int right = (node.rightChild != null) ? node.rightChild.rank + 1 : 0;
+        int left = (node.leftChild != null) ? node.leftChild.rank + 1 : 0;
+
+        return right + left;
+
+
+    }
+
+
 
     /**
      * Returns the balance factor of the subtree. The balance factor is defined
@@ -100,13 +194,19 @@ public class AVLRangeTree extends BinarySearchTree<Integer> {
      * Perform a right rotation on node `n`. Return the head of the rotated tree.
      */
     private RangeNode<Integer> rotateRight(RangeNode<Integer> x) {
-        RangeNode<Integer> y = x.leftChild;
-        x.leftChild = y.rightChild;
-        y.rightChild = x;
+        RangeNode<Integer> l = x.leftChild;
+        x.leftChild = l.rightChild;
+        l.rightChild = x;
+
+        x.rank = getDecendences(x);
+        l.rank = getDecendences(l);
+
         x.height = 1 + Math.max(height(x.leftChild), height(x.rightChild));
-        y.height = 1 + Math.max(height(y.leftChild), height(y.rightChild));
-        return y;
+        l.height = 1 + Math.max(height(l.leftChild), height(l.rightChild));
+        return l;
     }
+
+
 
     /**
      * Perform a left rotation on node `n`. Return the head of the rotated tree.
@@ -115,6 +215,10 @@ public class AVLRangeTree extends BinarySearchTree<Integer> {
         RangeNode<Integer> y = x.rightChild;
         x.rightChild = y.leftChild;
         y.leftChild = x;
+
+        x.rank = getDecendences(x);
+        y.rank = getDecendences(y);
+
         x.height = 1 + Math.max(height(x.leftChild), height(x.rightChild));
         y.height = 1 + Math.max(height(y.leftChild), height(y.rightChild));
         return y;

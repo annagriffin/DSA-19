@@ -36,18 +36,43 @@ public class RedBlackTree<T extends Comparable<T>> extends BinarySearchTree<T> {
     // make a left-leaning link lean to the right
     TreeNode<T> rotateRight(TreeNode<T> h) {
         // TODO
-        return h;
+        boolean temp = h.color;
+        h.color = h.leftChild.color;
+        h.leftChild.color = temp;
+
+        TreeNode<T> x = h.leftChild;
+        TreeNode<T> beta1 = x.rightChild;
+        x.rightChild = h;
+        h.leftChild = beta1;
+//
+
+        return x;
     }
 
     // make a right-leaning link lean to the left
     TreeNode<T> rotateLeft(TreeNode<T> h) {
         // TODO
-        return h;
+        boolean temp = h.color;
+        h.color = h.rightChild.color;
+        h.rightChild.color = temp;
+
+        TreeNode<T> k = h.rightChild;
+        TreeNode<T> beta = k.leftChild;
+        k.leftChild = h;
+        h.rightChild = beta;
+
+
+        return k;
     }
 
     // flip the colors of a TreeNode and its two children
     TreeNode<T> flipColors(TreeNode<T> h) {
         // TODO
+
+        h.color = RED;
+        h.leftChild.color = BLACK;
+        h.rightChild.color = BLACK;
+
         return h;
     }
 
@@ -61,6 +86,26 @@ public class RedBlackTree<T extends Comparable<T>> extends BinarySearchTree<T> {
      */
     private TreeNode<T> balance(TreeNode<T> h) {
         // TODO
+
+        if (h.rightChild != null && isRed(h.rightChild)) {
+                h = rotateLeft(h);
+
+
+        }
+
+        if (h.leftChild != null && h.leftChild.leftChild != null) {
+            if (h.leftChild.color == RED && h.leftChild.leftChild.color == RED) {
+                h = rotateRight(h);
+            }
+        }
+
+        if (h.rightChild != null && h.leftChild != null) {
+            if (h.leftChild.color == RED && h.rightChild.color == RED) {
+                flipColors(h);
+            }
+
+        }
+
         return h;
     }
 
@@ -72,8 +117,10 @@ public class RedBlackTree<T extends Comparable<T>> extends BinarySearchTree<T> {
     @Override
     TreeNode<T> insert(TreeNode<T> h, T key) {
         h = super.insert(h, key);
-        // TODO: use balance to correct for the three rotation cases
-        return h;
+         //TODO: use balance to correct for the three rotation cases
+
+
+        return balance(h);
     }
 
 
