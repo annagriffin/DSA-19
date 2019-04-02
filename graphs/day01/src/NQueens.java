@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class NQueens {
 
@@ -38,6 +40,33 @@ public class NQueens {
     }
 
 
+
+    public static void queensHelper(char[][] board, int r, int q, Set<Integer> columnsWithQueens, List<char[][]> answers) {
+
+        if (q==0) {
+            char[][] copy = copyOf(board);
+            answers.add(copy);
+
+        } else {
+
+
+            for (int i=0; i < board.length; i++) {
+                board[r][i] = 'Q';
+                if (!checkDiagonal(board,r,i) && !columnsWithQueens.contains(i)) {
+                    columnsWithQueens.add(i);
+                    q -= 1;
+                    queensHelper(board,r+1,q, columnsWithQueens,answers);
+                    q += 1;
+                    columnsWithQueens.remove(i);
+                }
+
+                board[r][i] = '.';
+
+            }
+        }
+    }
+
+
     /**
      * Creates a deep copy of the input array and returns it
      */
@@ -49,9 +78,27 @@ public class NQueens {
     }
 
 
+
+
+
     public static List<char[][]> nQueensSolutions(int n) {
         // TODO
         List<char[][]> answers = new ArrayList<>();
+
+        char[][] board = new char[n][n];
+
+        Set<Integer> columnsWithQueens = new HashSet<>();
+
+        for (int i=0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                board[i][j] = '.';
+            }
+        }
+
+
+        queensHelper(board,0,n,columnsWithQueens, answers);
+
+
         return answers;
     }
 
