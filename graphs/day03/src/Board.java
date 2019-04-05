@@ -11,13 +11,17 @@ public class Board {
 
     //TODO
     // Create a 2D array representing the solved board state
-    private int[][] goal = {{}};
+    private int[][] goal = {{1,2,3}, {4,5,6}, {7,8,0}};
 
     /*
      * Set the global board size and tile state
      */
     public Board(int[][] b) {
         // TODO: Your code here
+        tiles = b;
+        n = b.length;
+
+
     }
 
     /*
@@ -26,7 +30,8 @@ public class Board {
      */
     private int size() {
         // TODO: Your code here
-        return 0;
+
+        return n;
     }
 
     /*
@@ -34,7 +39,24 @@ public class Board {
      */
     public int manhattan() {
         // TODO: Your code here
-        return 0;
+
+        int manhattanDistances = 0;
+
+        for (int i =0; i < n; i++) {
+            for (int j=0; j < n; j++) {
+                int value = tiles[i][j];
+                if (tiles[i][j] != 0) {
+                    int x = (value - 1) / n;
+                    int y = (value - 1) % n;
+
+                    int distance = (Math.abs(i-x)) + (Math.abs(j-y));
+                    manhattanDistances = manhattanDistances + distance;
+
+                }
+            }
+        }
+
+        return manhattanDistances;
     }
 
     /*
@@ -42,6 +64,10 @@ public class Board {
      */
     public boolean isGoal() {
         // TODO: Your code here
+
+        if (manhattan() == 0) {
+            return true;
+        }
         return false;
     }
 
