@@ -64,7 +64,6 @@ public class Board {
      */
     public boolean isGoal() {
         // TODO: Your code here
-
         if (manhattan() == 0) {
             return true;
         }
@@ -77,7 +76,29 @@ public class Board {
      */
     public boolean solvable() {
         // TODO: Your code here
-        return false;
+        int inversions = 0;
+        int N = n^2;
+        for (int i = 0; i < N; i++){
+            for(int j = i + 1; j < N; j++){
+
+                int xi = (i) / n;
+                int yi = (i) % n;
+                int xj = (j) / n;
+                int yj = (j) % n;
+
+                System.out.print("yes");
+
+                if(tiles[xj][yj] > tiles[xi][yi] && tiles[xi][yi] > 0) {
+                    inversions++;
+                }
+            }
+        }
+        if(inversions %2 == 0 ){
+            return true;
+        } else{
+            return false;
+        }
+
     }
 
     /*
