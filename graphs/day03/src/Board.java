@@ -76,24 +76,38 @@ public class Board {
      */
     public boolean solvable() {
         // TODO: Your code here
-        int inversions = 0;
-        int N = n^2;
-        for (int i = 0; i < N; i++){
-            for(int j = i + 1; j < N; j++){
 
-                int xi = (i) / n;
-                int yi = (i) % n;
+        int inversions = 0;
+        int l = n*n;
+
+        for (int i = 0; i < l; i++){
+            int xi = (i) / n;
+            int yi = (i) % n;
+
+            for(int j = i + 1; j < l; j++){
+
+
                 int xj = (j) / n;
                 int yj = (j) % n;
 
-                System.out.print("yes");
+//                System.out.println(tiles[xi][yi]);
+//                System.out.println(tiles[xj][yj]);
 
-                if(tiles[xj][yj] > tiles[xi][yi] && tiles[xi][yi] > 0) {
+
+
+
+                if(tiles[xj][yj] < tiles[xi][yi] && tiles[xj][yj] != 0) {
                     inversions++;
+//                    System.out.println("yes");
                 }
+//                System.out.println(" ");
+
+
             }
         }
-        if(inversions %2 == 0 ){
+//        System.out.println(inversions);
+        if(inversions % 2 == 0 ){
+            System.out.print("Yes!");
             return true;
         } else{
             return false;
@@ -106,6 +120,8 @@ public class Board {
      */
     public Iterable<Board> neighbors() {
         // TODO: Your code here
+
+
         return null;
     }
 
@@ -137,6 +153,7 @@ public class Board {
     public static void main(String[] args) {
         // DEBUG - Your solution can include whatever output you find useful
         int[][] initState = {{1, 2, 3}, {4, 0, 6}, {7, 8, 5}};
+//        int[][] initState = {{1, 8, 2}, {0,4,3}, {7,6,5}};
         Board board = new Board(initState);
 
         System.out.println("Size: " + board.size());
