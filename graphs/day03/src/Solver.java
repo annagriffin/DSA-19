@@ -44,7 +44,14 @@ public class Solver {
      */
     private State root(State state) {
         // TODO: Your code here
-        return null;
+
+        State newState = state;
+
+        while (newState.prev != null) {
+            newState = newState.prev;
+        }
+
+        return newState;
     }
 
     /*
@@ -54,6 +61,27 @@ public class Solver {
      */
     public Solver(Board initial) {
         // TODO: Your code here
+
+        PriorityQueue q = new PriorityQueue();
+        Map<Board, Integer> V = new HashMap<>();
+
+        q.add(initial);
+        V.put(initial, 0);
+
+        while (q.isEmpty()) {
+            Board vertex = q.pop();
+            if (vertex.isGoal()) {
+
+
+            }
+
+            for(board n: neighbors(vertex)){
+                if(n != in V )
+            }
+        }
+
+
+
     }
 
     /*
@@ -62,7 +90,8 @@ public class Solver {
      */
     public boolean isSolvable() {
         // TODO: Your code here
-        return false;
+
+        return solutionState.board.solvable();
     }
 
     /*

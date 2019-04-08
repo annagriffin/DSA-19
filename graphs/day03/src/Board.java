@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -121,7 +123,83 @@ public class Board {
     public Iterable<Board> neighbors() {
         // TODO: Your code here
 
+        List<Board> neighboorList = new ArrayList<>();
 
+        int[] gh = blankSpace(tiles);
+        int x = gh[0];
+        int y = gh[1];
+
+
+        if(x > 0){
+            //swap up
+            int[][] temp = copyTiles(tiles);
+            int move = temp[x-1][y];
+            temp[x-1][y]  = temp[x][y];
+            temp[x][y] = move;
+
+            Board k = new Board(temp);
+            neighboorList.add(k);
+
+
+            }
+        if(x < 2){
+            //swap down
+            int[][] temp = copyTiles(tiles);
+            int move = temp[x+1][y];
+            temp[x+1][y]  = temp[x][y];
+            temp[x][y] = move;
+
+            Board k = new Board(temp);
+            neighboorList.add(k);
+        }
+        if(y > 0){
+            //sawp left
+            int[][] temp = copyTiles(tiles);
+            int move = temp[x][y-1];
+            temp[x][y-1]  = temp[x][y];
+            temp[x][y] = move;
+
+            Board k = new Board(temp);
+            neighboorList.add(k);
+        }
+        if(y < 2){
+            //swap right
+            int[][] temp = copyTiles(tiles);
+            int move = temp[x][y+1];
+            temp[x][y+1]  = temp[x][y];
+            temp[x][y] = move;
+
+            Board k = new Board(temp);
+            neighboorList.add(k);
+
+        }
+
+
+
+        return neighboorList;
+    }
+
+    public int[][] copyTiles(int[][] board) {
+        int [][] newBoard = new int[board.length][];
+        for(int i = 0; i < board.length; i++)
+            newBoard[i] = board[i].clone();
+
+        return newBoard;
+    }
+
+    private int[] blankSpace(int[][] board) {
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (this.tiles[i][j] == 0) {
+                    int[] gh = new int[2];
+                    gh[0]=i; gh[1]=j;
+
+                    return gh;
+                }
+
+            }
+        }
         return null;
     }
 
