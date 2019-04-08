@@ -62,7 +62,7 @@ public class Solver {
     public Solver(Board initial) {
         // TODO: Your code here
 
-        PriorityQueue q = new PriorityQueue();
+        PriorityQueue<Board> q = new PriorityQueue();
         Map<Board, Integer> V = new HashMap<>();
 
         ArrayList<Board> visited = new ArrayList<>();
@@ -72,16 +72,16 @@ public class Solver {
         V.put(initial, 0);
 
         while (!q.isEmpty()) {
-            Board vertex = q.pop();
+            Board vertex = q.poll();
 
             if (vertex.isGoal()) {
                 break;
             }
 
-            for(board n: neighbors(vertex)){
-                if (find(visited, n) == false) {
+            for(Board n: vertex.neighbors()){
+                if (find() == false) {
                     visited.add(n);
-                    q.push(n);
+                    q.add(n);
                 }
             }
         }
