@@ -81,7 +81,7 @@ public class Solver {
             for(board n: neighbors(vertex)){
                 if (find(visited, n) == false) {
                     visited.add(n);
-                    q.put(n);
+                    q.push(n);
                 }
             }
         }
