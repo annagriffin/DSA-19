@@ -65,18 +65,24 @@ public class Solver {
         PriorityQueue q = new PriorityQueue();
         Map<Board, Integer> V = new HashMap<>();
 
+        ArrayList<Board> visited = new ArrayList<>();
+        visited.add(initial);
+
         q.add(initial);
         V.put(initial, 0);
 
-        while (q.isEmpty()) {
+        while (!q.isEmpty()) {
             Board vertex = q.pop();
+
             if (vertex.isGoal()) {
-
-
+                break;
             }
 
             for(board n: neighbors(vertex)){
-                if(n != in V )
+                if (find(visited, n) == false) {
+                    visited.add(n);
+                    q.put(n);
+                }
             }
         }
 
@@ -99,6 +105,14 @@ public class Solver {
      */
     public Iterable<Board> solution() {
         // TODO: Your code here
+
+        if (!isSolvable()) {
+            return null;
+        }
+
+
+
+
         return null;
     }
 
