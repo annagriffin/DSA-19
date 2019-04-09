@@ -109,7 +109,7 @@ public class Board {
         }
 //        System.out.println(inversions);
         if(inversions % 2 == 0 ){
-            System.out.print("Yes!");
+            //System.out.print("Yes!");
             return true;
         } else{
             return false;

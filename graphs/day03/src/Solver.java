@@ -27,7 +27,7 @@ public class Solver {
             this.moves = moves;
             this.prev = prev;
             // TODO
-            this.cost =  this.board.manhattan()  / 2 +  moves;
+            this.cost =  this.board.manhattan() *2 +  moves;
         }
 
         public int compareTo(State s) {
@@ -89,7 +89,7 @@ public class Solver {
 
 
             State vertex = q.poll();
-            System.out.println(vertex.moves);
+            //System.out.println(vertex.moves);
 
             if (vertex.board.isGoal()) {
 
