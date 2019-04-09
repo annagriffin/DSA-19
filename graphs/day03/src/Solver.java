@@ -15,7 +15,7 @@ public class Solver {
      * State class to make the cost calculations simple
      * This class holds a board state and all of its attributes
      */
-    private class State {
+    private class State implements Comparable<State> {
         // Each state needs to keep track of its cost and the previous state
         private Board board;
         private int moves; // equal to g-cost in A*
@@ -27,7 +27,13 @@ public class Solver {
             this.moves = moves;
             this.prev = prev;
             // TODO
-            cost = 0;
+            this.cost =  this.board.manhattan()  / 2 +  moves;
+        }
+
+        public int compareTo(State s) {
+
+            return this.cost - s.cost;
+            //return this.moves - s.moves;
         }
 
         @Override
@@ -62,26 +68,45 @@ public class Solver {
     public Solver(Board initial) {
         // TODO: Your code here
 
-        PriorityQueue<Board> q = new PriorityQueue();
+        PriorityQueue<State> q = new PriorityQueue<>();
         Map<Board, Integer> V = new HashMap<>();
 
-        ArrayList<Board> visited = new ArrayList<>();
-        visited.add(initial);
 
-        q.add(initial);
-        V.put(initial, 0);
+        State initState = new State(initial, 0,null);
+
+        if (!initial.solvable()) {
+            return;
+        }
+
+        solutionState = initState;
+
+        V.put(initState.board, initState.cost);
+
+        q.add(initState);
 
         while (!q.isEmpty()) {
-            Board vertex = q.poll();
 
-            if (vertex.isGoal()) {
+
+
+            State vertex = q.poll();
+            System.out.println(vertex.moves);
+
+            if (vertex.board.isGoal()) {
+
+                solutionState = vertex;
+                 //Iterable<Board> ans = this.solution() ;
+                minMoves = vertex.moves;
+                solved = true;
                 break;
-            }
+            } else {
 
-            for(Board n: vertex.neighbors()){
-                if (find() == false) {
-                    visited.add(n);
-                    q.add(n);
+                for (Board n : vertex.board.neighbors()) {
+
+                    if (V.get(n) == null || V.get(n) > vertex.cost) {
+                        V.put(n, vertex.cost + 1);
+                        State temp = new State(n, vertex.moves + 1, vertex);
+                        q.add(temp);
+                    }
                 }
             }
         }
@@ -97,7 +122,7 @@ public class Solver {
     public boolean isSolvable() {
         // TODO: Your code here
 
-        return solutionState.board.solvable();
+        return solved;
     }
 
     /*
@@ -106,14 +131,19 @@ public class Solver {
     public Iterable<Board> solution() {
         // TODO: Your code here
 
+        List<Board> solutions = new LinkedList<>();
+
         if (!isSolvable()) {
             return null;
         }
 
+        while (solutionState.prev != null) {
+            solutions.add(solutionState.prev.board);
+            solutionState = solutionState.prev;
+        }
 
 
-
-        return null;
+        return solutions;
     }
 
     public State find(Iterable<State> iter, Board b) {
