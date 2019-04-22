@@ -4,9 +4,21 @@ import java.util.concurrent.ThreadLocalRandom;
 // use this class if you are designing your own Rubik's cube implementation
 public class RubiksCube {
 
+    private int[][] cube;
+
     // initialize a solved rubiks cube
     public RubiksCube() {
         // TODO
+
+        cube = new int[6][4];
+
+        for (int i=0; i<6; i++) {
+            for (int j=0; j<4; j++) {
+
+            }
+        }
+
+
     }
 
 
@@ -24,6 +36,8 @@ public class RubiksCube {
         // TODO
         return false;
     }
+
+
 
     /**
      * return a hashCode for this rubik's cube.

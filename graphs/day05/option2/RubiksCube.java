@@ -1,12 +1,18 @@
+import javax.print.attribute.standard.ReferenceUriSchemesSupported;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 
 // this is our implementation of a rubiks cube. It is your job to use A* or some other search algorithm to write a
-// solve() function
+
 public class RubiksCube {
 
     private BitSet cube;
+    private boolean solved = false;
+    private RubiksCube prev = null;
+    private char prev_rotation;
+    private int moves = 0;
+    private int cost;
 
     // initialize a solved rubiks cube
     public RubiksCube() {
@@ -17,7 +23,11 @@ public class RubiksCube {
                 setColor(side * 4 + i, side);
             }
         }
+
     }
+
+
+
 
     // initialize a rubiks cube with the input bitset
     private RubiksCube(BitSet s) {
@@ -26,8 +36,13 @@ public class RubiksCube {
 
     // creates a copy of the rubics cube
     public RubiksCube(RubiksCube r) {
+
         cube = (BitSet) r.cube.clone();
     }
+
+
+
+
 
     // return true if this rubik's cube is equal to the other rubik's cube
     @Override
@@ -187,11 +202,120 @@ public class RubiksCube {
         return listTurns;
     }
 
+    public int manhattan() {
+        int manhattanDist = 0;
+
+
+        RubiksCube solvedCube = new RubiksCube();
+
+
+
+        for (int i=0;i<24*3; i=i+3) {
+            if (this.getColor(i) != solvedCube.getColor(i)) {
+                manhattanDist = manhattanDist + 1;
+            }
+        }
+
+        return manhattanDist / 2;
+    }
+
+
+
+
+    public static Comparator<RubiksCube> idComp = new Comparator<RubiksCube>() {
+        @Override
+        public int compare(RubiksCube o1, RubiksCube o2) {
+            return o1.cost - o2.cost;
+        }
+    };
+
 
     // return the list of rotations needed to solve a rubik's cube
     public List<Character> solve() {
         // TODO
-        return new ArrayList<>();
+
+        PriorityQueue<RubiksCube> q = new PriorityQueue<>(idComp);
+        Map<RubiksCube,RubiksCube> open = new HashMap<>();
+        Map<RubiksCube,RubiksCube> closed = new HashMap<>();
+
+        LinkedList<Character> solutions = new LinkedList<>();
+
+
+        RubiksCube state = this;
+        state.cost = state.manhattan();
+
+        open.put(state, state);
+        q.add(state);
+        System.out.println("funccall");
+
+
+        while (!q.isEmpty()) {
+            RubiksCube vertex = q.poll();
+//            System.out.println(vertex.moves);
+
+
+            if (vertex.manhattan() == 0) {
+
+
+//                System.out.println("goal");
+
+                solved = true;
+
+                while(vertex.prev != null) {
+                    solutions.addFirst(vertex.prev_rotation);
+                    vertex = vertex.prev;
+
+                }
+
+//                System.out.println("goal1");
+////                for(int i=0;i<3;i++)
+////                {
+////                    System.out.println(solutions.get(i));
+////                }
+//                break;
+                System.out.println(solutions);
+
+                return solutions;
+
+            }
+
+            else {
+                char[] rotations = {'u', 'U', 'r', 'R', 'f', 'F'};
+//
+                for (char r : rotations) {
+//                    System.out.println(vertex.moves);
+                    RubiksCube neighbor = vertex.rotate(r);
+                    neighbor.moves = vertex.moves + 1;
+//                    System.out.println(neighbor.moves);
+                    neighbor.cost = neighbor.moves + neighbor.manhattan();
+
+
+
+                    if (open.get(neighbor) != null && neighbor.cost > open.get(neighbor).cost) {
+                        closed.put(neighbor, neighbor);
+
+
+                    } else if (closed.get(neighbor) != null && neighbor.cost > closed.get(neighbor).cost) {
+
+                        closed.put(neighbor, neighbor);
+
+                    } else {
+
+                        neighbor.prev = vertex;
+                        neighbor.prev_rotation = r;
+                        q.add(neighbor);
+                        open.put(neighbor,neighbor);
+                        closed.put(neighbor,neighbor);
+                    }
+
+                }
+            }
+
+
+        }
+
+        return null;
+
     }
 
 }
