@@ -2,6 +2,70 @@ public class SplitCoins {
 
     public static int splitCoins(int[] coins) {
         // TODO
+
+
+        int difference = -1;
+
+
+
+
+
+
+
         return -1;
     }
+
+
+
+
+
+
+
+
+    private int recursiveFunc(int[] coin, int[] memo) {
+
+        if (coin.length == 0 || coin.length == 1) {
+
+        }
+
+
+
+        return
+    }
 }
+
+
+
+
+//    public long publicFunction(/* User inputs */){
+//
+//        /** INITIALIZE THE MEMO */
+//
+//        // CALL RECURSIVE FUNCTION ON PROBLEM THAT YOU WANT TO SOLVE, RETURNING THE ANSWER
+//
+//        return 0;
+//
+//
+//    }
+//
+//    private long recursiveFunction(/* Only arguments that are part of subproblem, and your memo */){
+//
+//        // BASE CASES
+//
+//
+//        /** HAS THIS BEEN MEMOIZED? */
+//
+//
+//        // RECURRENCE RELATION, CALL YOUR RECURSIVE FUNCTION
+//
+//
+//        /** UPDATE THE MEMO */
+//
+//
+//        // RETURN THE ANSWER
+//
+//        return 0;
+//
+//    }
+//
+
