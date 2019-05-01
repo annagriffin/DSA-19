@@ -1,71 +1,55 @@
+import java.util.Arrays;
+
 public class SplitCoins {
 
     public static int splitCoins(int[] coins) {
         // TODO
 
+        int sumTotal = 0;
 
-        int difference = -1;
+        int coin = coins.length;
+
+        for (int c : coins) {
+            sumTotal = sumTotal + c;
+        }
 
 
-
-
-
-
-
-        return -1;
-    }
-
+        int[][] DP = new int[coins.length][sumTotal];
 
 
 
-
-
-
-
-    private int recursiveFunc(int[] coin, int[] memo) {
-
-        if (coin.length == 0 || coin.length == 1) {
-
+        for (int k = 0; k < coins.length; k++) {
+            for (int l=0; l < sumTotal; l++) {
+                DP[k][l] = -1;
+            }
         }
 
 
 
-        return
+        return recursiveFunction(coin,0,coins, sumTotal, DP );
     }
+
+
+    public static int recursiveFunction(int currCoin, int currSum, int[] coins, int sumTotal, int[][] DP){
+
+        // BASE CASES
+        int sum2 = sumTotal - currSum;
+
+
+        if (currCoin == 0) {
+            return Math.abs(currSum - sum2) ;
+        }
+
+        if (DP[currCoin-1][currSum] != -1 ) {
+            return DP[currCoin-1][currSum];
+        }
+
+        DP[currCoin-1][currSum] = Math.min(recursiveFunction(currCoin-1, currSum+coins[currCoin-1], coins, sumTotal, DP), recursiveFunction(currCoin-1, currSum, coins, sumTotal, DP));
+
+
+
+        return DP[currCoin-1][currSum];
+
+    }
+
 }
-
-
-
-
-//    public long publicFunction(/* User inputs */){
-//
-//        /** INITIALIZE THE MEMO */
-//
-//        // CALL RECURSIVE FUNCTION ON PROBLEM THAT YOU WANT TO SOLVE, RETURNING THE ANSWER
-//
-//        return 0;
-//
-//
-//    }
-//
-//    private long recursiveFunction(/* Only arguments that are part of subproblem, and your memo */){
-//
-//        // BASE CASES
-//
-//
-//        /** HAS THIS BEEN MEMOIZED? */
-//
-//
-//        // RECURRENCE RELATION, CALL YOUR RECURSIVE FUNCTION
-//
-//
-//        /** UPDATE THE MEMO */
-//
-//
-//        // RETURN THE ANSWER
-//
-//        return 0;
-//
-//    }
-//
-
